@@ -1,0 +1,10 @@
+{
+    "require": {
+        "symfony/process": "^4.1"
+    },
+    "autoload": {
+    	"psr4": {
+    		"FFMPEGLIB\\": "core"
+    	}
+    }
+}
