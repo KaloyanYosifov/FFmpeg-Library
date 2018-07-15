@@ -6,5 +6,9 @@
     	"psr4": {
     		"FFMPEGLIB\\": "core"
     	}
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^4.1",
+        "symfony/filesystem": "^4.1"
     }
 }
