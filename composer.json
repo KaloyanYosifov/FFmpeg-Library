@@ -2,7 +2,8 @@
     "autoload": {
     	"psr-4": {
     		"FFMpegLib\\": "core"
-    	}
+    	},
+        "files": ["core/helpers.php"]
     },
     "require": {
         "symfony/process": "^4.1"
