@@ -3,7 +3,7 @@
 namespace FFMpegLib;
 
 use FFMpegLib\Executor\Executor;
-use FFMpegLib\Arguments\FFMpegChecker;
+use FFMpegLib\Commands\FFMpegChecker;
 use FFMpegLib\Exceptions\FFMpegNotInitialized;
 
 class Initializer {
@@ -11,7 +11,7 @@ class Initializer {
 
 	public static function initializeFFMpeg() {
 		if (!static::$ffmpegInitialized) {
-			$ffmpegChecker = new FFMpegChecker();
+			$ffmpegChecker = new FFMpegChecker(true);
 			Executor::executeCommand($ffmpegChecker);
 
 			static::$ffmpegInitialized = $ffmpegChecker->passed();
