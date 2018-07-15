@@ -13,8 +13,12 @@ class Time {
 	 * Supported time formats currently are 00:00:00
 	 * @param TimeFormatInterface $timeFormat
 	 */
-	protected function __construct(TimeFormatInterface $timeFormat) {
-		$this->timeFormat = $timeFormat;
+	protected function __construct(TimeFormatInterface $timeFormatObject = null, $timeFormat = '00:00:00') {
+		if ($timeFormatObject) {
+			$this->timeFormat = $timeFormatObject->getFormattedTime();
+		} else {
+			$this->timeFormat = $timeFormat;
+		}
 		$this->time = [];
 		$this->initializeTime();
 	}
@@ -24,8 +28,12 @@ class Time {
 	 * @param  TimeFormatInterface $timeFormat
 	 * @return new Time
 	 */
-	public static function create(TimeFormatInterface $timeFormat) {
-		return new static($timeFormat);
+	public static function create(TimeFormatInterface $timeFormatObject) {
+		return new static($timeFormatObject);
+	}
+
+	public static function createFromString($timeFormat = '00:00:00') {
+		return new static(null, $timeFormat);
 	}
 
 	public function getSeconds() {
@@ -50,7 +58,7 @@ class Time {
 
 
 	public function getFullTime() {
-		return $this->timeFormat->getFormattedTime();
+		return $this->timeFormat;
 	}
 
 	protected function getNormalizedTime($to = 'seconds') {
