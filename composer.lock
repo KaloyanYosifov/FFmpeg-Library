@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc970f1cce1ad47a0fe5e4bf37e04df8",
+    "content-hash": "96171dec62d2945630a9fad44b13efcb",
     "packages": [
         {
             "name": "symfony/finder",
