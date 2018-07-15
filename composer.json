@@ -1,11 +1,11 @@
 {
+    "autoload": {
+    	"psr-4": {
+    		"FFMpegLib\\": "core"
+    	}
+    },
     "require": {
         "symfony/process": "^4.1"
-    },
-    "autoload": {
-    	"psr4": {
-    		"FFMPEGLIB\\": "core"
-    	}
     },
     "require-dev": {
         "symfony/var-dumper": "^4.1",
