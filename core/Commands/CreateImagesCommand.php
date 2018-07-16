@@ -24,7 +24,7 @@ class CreateImagesCommand implements CommandInterface {
 		$endPosition = '00:00:03',
 		Time $videoDuration
 		) {
-		ffmpegInitialized();
+		Initializer::isFFMpegInitialized();
 		$this->validation = false;
 		$this->imageFullPathName = formatImageNameFoFFMpeg($imageFullPathName);
 		$endPositionTime = Time::createFromString($endPosition);

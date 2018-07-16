@@ -5,6 +5,7 @@ namespace FFMpegLib\Commands;
 use FFMpegLib\Interfaces\CommandInterface;
 use FFMpegLib\Exceptions\FFMpegNotFoundException;
 use FFMpegLib\Traits\Validation;
+use FFMpegLib\Initializer;
 
 class FFMpegChecker implements CommandInterface {
 	use Validation;
@@ -14,7 +15,7 @@ class FFMpegChecker implements CommandInterface {
 
 	public function __construct($local = false) {
 		if (!$local) {
-			ffmpegInitialized();
+			Initializer::isFFMpegInitialized();
 		}
 		
 		$this->args = [

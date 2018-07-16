@@ -8,6 +8,7 @@ use FFMpegLib\Inspectors\VideoInspector;
 use FFMpegLib\FileFinder\FileFinder;
 use FFMpegLib\Util\Time;
 use FFMpegLib\Convertors\FFmpegDurationConvertor;
+use FFMpegLib\Initializer;
 
 class VideoDurationCommand implements CommandInterface {
 	use Validation;
@@ -17,7 +18,8 @@ class VideoDurationCommand implements CommandInterface {
 	protected $time;
 
 	public function __construct($videoFile = null, $directoryToSearch = __DIR__) {
-		ffmpegInitialized();
+		Initializer::isFFMpegInitialized();
+		
 		$this->validation = false;
 		$this->time = false;
 
