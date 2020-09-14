@@ -21,11 +21,11 @@
         "files": ["core/helpers.php"]
     },
     "require": {
-        "symfony/process": "^4.1",
-        "symfony/finder": "^4.1"
+        "symfony/process": "^5.1",
+        "symfony/finder": "^5.1"
     },
     "require-dev": {
-        "symfony/var-dumper": "^4.1",
-        "symfony/filesystem": "^4.1"
+        "symfony/var-dumper": "^5.1",
+        "symfony/filesystem": "^5.1"
     }
 }
