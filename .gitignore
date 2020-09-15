@@ -3,3 +3,4 @@ vendor
 assets
 loader.php
 config.php
+.idea

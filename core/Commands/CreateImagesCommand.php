@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace FFMpegLib\Commands;
 
@@ -8,73 +8,83 @@ use FFMpegLib\Inspectors\VideoInspector;
 use FFMpegLib\Util\Time;
 use FFMpegLib\Commands\Exceptions\VideoLengthError;
 
-class CreateImagesCommand implements CommandInterface {
-	use Validation;
+class CreateImagesCommand implements CommandInterface
+{
+    use Validation;
 
-	protected $args;
-	protected $validation;
-	protected $imageFullPathName;
-	protected $framesCreated;
+    protected $args;
+    protected $validation;
+    protected $imageFullPathName;
+    protected $framesCreated;
 
-	public function __construct
-		(
-		$videoFile = null,
-		$imageFullPathName = '',
-		$startPosition = '00:00:00', 
-		$endPosition = '00:00:03',
-		Time $videoDuration
-		) {
-		Initializer::isFFMpegInitialized();
-		$this->validation = false;
-		$this->imageFullPathName = formatImageNameFoFFMpeg($imageFullPathName);
-		$endPositionTime = Time::createFromString($endPosition);
-		
-		$startPositionTime = Time::createFromString($startPosition);
+    public function __construct
+    (
+        $videoFile = null,
+        $imageFullPathName = '',
+        $startPosition = '00:00:00',
+        $endPosition = '00:00:03',
+        Time $videoDuration
+    ) {
+        Initializer::isFFMpegInitialized();
+        $this->validation = false;
+        $this->imageFullPathName = formatImageNameFoFFMpeg($imageFullPathName);
+        $endPositionTime = Time::createFromString($endPosition);
 
-		if ($startPositionTime->getTimeInSeconds() > $videoDuration->getTimeInSeconds()) {
-			$startPosition = "00:00:00";
-			$startPositionTime = Time::createFromString($startPosition);
-		}
+        $startPositionTime = Time::createFromString($startPosition);
 
-		if ($endPositionTime->getTimeInSeconds() > $videoDuration->getTimeInSeconds()) {
-			throw new VideoLengthError($endPosition, $videoDuration->getFullTime());
-		}
+        if ($startPositionTime->getTimeInSeconds() > $videoDuration->getTimeInSeconds()) {
+            $startPosition = "00:00:00";
+            $startPositionTime = Time::createFromString($startPosition);
+        }
 
-		// create an instance of inpsector
-		$videoInspector = new VideoInspector($videoFile);
+        if ($endPositionTime->getTimeInSeconds() > $videoDuration->getTimeInSeconds()) {
+            throw new VideoLengthError($endPosition, $videoDuration->getFullTime());
+        }
 
-		// check if file is supported
-		$videoInspector->checkFile();
+        // create an instance of inpsector
+        $videoInspector = new VideoInspector($videoFile);
 
-		$secondsCombinedFromStartAndEnd = $endPositionTime->getSeconds() - $startPositionTime->getSeconds();
+        // check if file is supported
+        $videoInspector->checkFile();
 
-		$MAX_FRAMES = 25;
-		$this->framesCreated = $MAX_FRAMES * $secondsCombinedFromStartAndEnd;
+        $secondsCombinedFromStartAndEnd = $endPositionTime->getSeconds() - $startPositionTime->getSeconds();
 
-		$this->args = [
-			'ffmpeg',
-			'-ss ' . $startPosition,
-			'-to ' . $endPosition,
-			'-i ' . $videoFile,
-			'-frames ' . $this->framesCreated,
-			$this->imageFullPathName,
-			'2>&1',
-		];
-	}
+        $MAX_FRAMES = 25;
+        $this->framesCreated = $MAX_FRAMES * $secondsCombinedFromStartAndEnd;
 
-	public function getCommandArgs() {
-		return implode(' ', $this->args);
-	}
+        $this->args = [
+            'ffmpeg',
+            '-ss',
+            $startPosition,
+            '-to',
+            $endPosition,
+            '-i',
+            $videoFile,
+            '-frames',
+            $this->framesCreated,
+            $this->imageFullPathName,
+            '2>&1',
+        ];
+    }
 
-	public function checkOutput($output) {
-		if (!$output) {
-			$this->validation = false;
-		}
+    public function getCommandArgs()
+    {
+        return $this->args;
+    }
 
-		$this->validation = true;
-	}
+    public function checkOutput($output)
+    {
+        if (!$output) {
+            $this->validation = false;
 
-	public function framesCreated() {
-		return $this->framesCreated;
-	}
+            return;
+        }
+
+        $this->validation = true;
+    }
+
+    public function framesCreated()
+    {
+        return $this->framesCreated;
+    }
 }

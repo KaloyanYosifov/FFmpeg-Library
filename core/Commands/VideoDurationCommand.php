@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace FFMpegLib\Commands;
 
@@ -10,48 +10,56 @@ use FFMpegLib\Util\Time;
 use FFMpegLib\Convertors\FFmpegDurationConvertor;
 use FFMpegLib\Initializer;
 
-class VideoDurationCommand implements CommandInterface {
-	use Validation;
+class VideoDurationCommand implements CommandInterface
+{
+    use Validation;
 
-	protected $args;
-	protected $validation;
-	protected $time;
+    protected $args;
+    protected $validation;
+    protected $time;
 
-	public function __construct($videoFile = null, $directoryToSearch = __DIR__) {
-		Initializer::isFFMpegInitialized();
-		
-		$this->validation = false;
-		$this->time = false;
+    public function __construct($videoFile = null, $directoryToSearch = __DIR__)
+    {
+        Initializer::isFFMpegInitialized();
 
-		// create an instance of inpsector
-		$videoInspector = new VideoInspector($videoFile);
+        $this->validation = false;
+        $this->time = false;
 
-		// check if file is supported
-		$videoInspector->checkFile();
+        // create an instance of inpsector
+        $videoInspector = new VideoInspector($videoFile);
 
-		$videoFile = FileFinder::findFile($videoFile, $directoryToSearch);
+        // check if file is supported
+        $videoInspector->checkFile();
 
-		$this->args = [
-			'ffmpeg',
-			'-i ' . $videoFile,
-			'2>&1 |',
-			'grep Duration',
-		];
-	}
+        $videoFile = FileFinder::findFile($videoFile, $directoryToSearch);
 
-	public function getCommandArgs() {
-		return implode(' ', $this->args);
-	}
+        $this->args = [
+            'ffmpeg',
+            '-i',
+            $videoFile,
+            '2>&1',
+            '|',
+            'grep',
+            'Duration',
+        ];
+    }
 
-	public function checkOutput($output) {
-		if (!$output) {
-			$this->validation = false;
-		}
+    public function getCommandArgs()
+    {
+        return $this->args;
+    }
 
-		$this->time = Time::create(FFmpegDurationConvertor::extractDuration($output));
-	}
+    public function checkOutput($output)
+    {
+        if (!$output) {
+            $this->validation = false;
+        }
 
-	public function getDuration() {
-		return $this->time;
-	}
+        $this->time = Time::create(FFmpegDurationConvertor::extractDuration($output));
+    }
+
+    public function getDuration()
+    {
+        return $this->time;
+    }
 }

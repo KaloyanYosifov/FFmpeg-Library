@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace FFMpegLib\Commands;
 
@@ -7,33 +7,39 @@ use FFMpegLib\Exceptions\FFMpegNotFoundException;
 use FFMpegLib\Traits\Validation;
 use FFMpegLib\Initializer;
 
-class FFMpegChecker implements CommandInterface {
-	use Validation;
-	
-	protected $args;
-	protected $validation;
+class FFMpegChecker implements CommandInterface
+{
+    use Validation;
 
-	public function __construct($local = false) {
-		if (!$local) {
-			Initializer::isFFMpegInitialized();
-		}
-		
-		$this->args = [
-			'ffmpeg -version 2>&1',
-		];
+    protected $args;
+    protected $validation;
 
-		$this->validation = false;
-	}
+    public function __construct($local = false)
+    {
+        if (!$local) {
+            Initializer::isFFMpegInitialized();
+        }
 
-	public function getCommandArgs() {
-		return implode(' ', $this->args);
-	}
+        $this->args = [
+            'ffmpeg',
+            '-version',
+            '2>&1',
+        ];
 
-	public function checkOutput($output) {
-		if (!preg_match('~(Copyright).*?(FFmpeg)~', $output)) {
-			throw new FFMpegNotFoundException();
-		}
+        $this->validation = false;
+    }
 
-		$this->validation = true;
-	}
+    public function getCommandArgs()
+    {
+        return $this->args;
+    }
+
+    public function checkOutput($output)
+    {
+        if (!preg_match('~(Copyright).*?(FFmpeg)~', $output)) {
+            throw new FFMpegNotFoundException();
+        }
+
+        $this->validation = true;
+    }
 }

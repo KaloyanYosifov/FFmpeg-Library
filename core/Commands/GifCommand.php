@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace FFMpegLib\Commands;
 
@@ -7,39 +7,46 @@ use FFMpegLib\Traits\Validation;
 use FFMpegLib\Commands\Exceptions\NotGifFileException;
 use FFMpegLib\Initializer;
 
-class GifCommand implements CommandInterface {
-	use Validation;
+class GifCommand implements CommandInterface
+{
+    use Validation;
 
-	protected $args;
-	protected $validation;
+    protected $args;
+    protected $validation;
 
-	public function __construct($imagesFirstName = 'image%d.png', $outputGifFile = 'video.gif') {
-		Initializer::isFFMpegInitialized();
-		
-		if (!preg_match('~\.gif$~', $outputGifFile)) {
-			throw new NotGifFileException($outputGifFile);
-		}
+    public function __construct($imagesFirstName = 'image%d.png', $outputGifFile = 'video.gif')
+    {
+        Initializer::isFFMpegInitialized();
 
-		$this->validation = false;
-		$imagesFirstName = formatImageNameFoFFMpeg($imagesFirstName);
+        if (!preg_match('~\.gif$~', $outputGifFile)) {
+            throw new NotGifFileException($outputGifFile);
+        }
 
-		$this->args = [
-			'ffmpeg',
-			'-i ' . $imagesFirstName,
-			$outputGifFile,
-			'2>&1',
-		];
-	}
+        $this->validation = false;
+        $imagesFirstName = formatImageNameFoFFMpeg($imagesFirstName);
 
-	public function getCommandArgs() {
-		return implode(' ', $this->args);
-	}
+        $this->args = [
+            'ffmpeg',
+            '-i',
+            $imagesFirstName,
+            $outputGifFile,
+            '2>&1',
+        ];
+    }
 
-	public function checkOutput($output) {
-		if (!$output) {
-			$this->validation = false;
-		}
+    public function getCommandArgs()
+    {
+        return $this->args;
+    }
 
-		$this->validation = true;
-	}
+    public function checkOutput($output)
+    {
+        if (!$output) {
+            $this->validation = false;
+
+            return;
+        }
+
+        $this->validation = true;
+    }
 }
